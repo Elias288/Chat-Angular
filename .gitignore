@@ -8,8 +8,11 @@
 
 # Node
 /node_modules
+/server/node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
+/server/package-lock.json
 
 # IDEs and editors
 .idea/
