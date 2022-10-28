@@ -29,22 +29,18 @@ io.on('connection', (socket) => {
 		console.log('Usuario conectado: ', newUser.name)
 		// console.log('Cantidad de Usuario conectados: ' + users.getCantidadUsuarios())
 
-		// const messageData = {
-		// 	room: newUser.room,
-		// 	author: 'sistema',
-		// 	message: `${newUser.name} se ha unido`,
-		// 	time: new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes() + ':' + new Date(Date.now()).getSeconds()
-		// }
+		const messageData = {
+			room: newUser.room,
+			author: 'sistema',
+			content: `${newUser.name} has joined`,
+			time: new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes() + ':' + new Date(Date.now()).getSeconds()
+		}
 
 		socket.emit('userList', users.getUsersInRoom(newUser.room))
 		socket.broadcast.emit('userList', users.getUsersInRoom(newUser.room))
 
 		socket.join(newUser.room)
-		// console.log(users.getUsersInRoom(newUser.room));
-
-		// socket.broadcast.to(newUser.room).emit('receiveMessage', messageData)
-		// socket.to(newUser.room).emit('UserList', users.getUsersInRoom(newUser.room))
-
+		socket.broadcast.to(newUser.room).emit('receiveMessage', messageData)
 	})
 	
 	socket.on('disconnect', () => {

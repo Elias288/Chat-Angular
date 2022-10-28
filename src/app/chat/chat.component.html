@@ -1,6 +1,49 @@
-<h1>Chat</h1>
-<h3>Room: {{me.room}}</h3>
-<ul>
-    <li>{{me.name}}</li>
-    <li *ngFor="let user of users">{{user.name}}</li>
-</ul>
+<mat-drawer-container class="container" autosize>
+    
+    <mat-drawer #drawer class="sidenav" mode="side">
+        <div class="sidenav-content">
+            <h1>Chat</h1>
+            
+            <div class="roomConnection">
+                <h3>Room: {{me.room}}</h3>
+                <button mat-raised-button
+                        matTooltip="copy room id"
+                        (click)="copyRoomId()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="content_copy"></mat-icon>
+                </button>
+            </div>    
+            
+            <div class="usersList">
+                <ul>
+                    <li>{{me.name}}</li>
+                    <li *ngFor="let user of users">{{user.name}}</li>
+                </ul>
+            </div>
+    
+            <button mat-button color="warn" (click)="disconnect()">Disconnect</button>
+        </div>
+    </mat-drawer>
+    
+    <button type="button" mat-button (click)="drawer.toggle()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="menu"></mat-icon>
+    </button>
+    
+    <div class="content">
+        <div class="messagesList" #scrollMe>
+            <mat-list role="list">
+                <mat-list-item *ngFor="let message of messages" class="message" role="listitem">
+                    <div mat-line>{{message.content}}</div>
+                    <div mat-line>{{message.author}} - {{message.time}}</div>
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+            </mat-list>
+        </div>
+        
+        <div class="inputs">
+            <textarea class="textarea" rows="1" placeholder="Message"></textarea>
+            <button mat-raised-button (click)="sendMessage()">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="send"></mat-icon>
+            </button>
+        </div>
+    </div>
+</mat-drawer-container>

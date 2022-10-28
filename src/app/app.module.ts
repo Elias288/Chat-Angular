@@ -14,6 +14,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatListModule,
+    MatSidenavModule,
   ],
   providers: [ SocketioService ],
   bootstrap: [AppComponent]

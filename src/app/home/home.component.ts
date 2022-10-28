@@ -18,7 +18,10 @@ export class HomeComponent implements OnInit {
   room: string = this.uuid;
   checkedRoom: boolean;
 
-  constructor( private socketService: SocketioService, private router: Router ) {
+  constructor(
+    private socketService: SocketioService,
+    private router: Router
+  ) {
     this.checkedRoom = false;
   }
 
