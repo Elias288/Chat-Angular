@@ -1,18 +1,26 @@
 import { Injectable } from '@angular/core';
+import * as Rx from 'rxjs';
 import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SocketioService {
-  socket: any
+  socket: any;
 
-  constructor() { }
-
-  setupSocketConnection() {
-    console.log('connect?');
-    
+  constructor() {
     this.socket = io(environment.SOCKET_ENDPOINT)
+  }
+
+  emit(eventName: string, data: any) {
+    this.socket.emit(eventName, data)
+  }
+
+  listen(eventName: string): Observable<any> {
+    return new Observable(subscriber => {
+      this.socket.on(eventName, (data: any) => {
+        subscriber.next(data)
+      })
+    })
   }
 }

@@ -1,0 +1,59 @@
+.home {
+  padding-top: 100px;
+  height: calc(100vh - 100px);
+}
+
+.home h1 {
+  text-align: center;
+}
+
+form {
+  padding: 30px 2.5rem 0;
+}
+
+.inputForm {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 300px;
+}
+
+.inputForm > * {
+  margin-bottom: 1.3rem;
+}
+
+.example-full-width {
+  width: 100%;
+  font-size: 1.3rem;
+}
+
+button {
+  width: 100%;
+  border: 1px solid;
+}
+
+@media screen and (min-width: 500px) {
+  .home {
+    width: 80%;
+    margin: auto;
+  }
+  
+  form {
+    padding: 0;
+    padding-top: 30px;
+    width: fit-content;
+    margin: auto;
+  }
+
+  .inputForm {
+    align-items: flex-start;
+  }
+
+  .example-full-width {
+    font-size: 1rem;
+  }
+
+  button {
+    width: fit-content;
+  }
+}

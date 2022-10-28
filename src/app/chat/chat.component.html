@@ -1,1 +1,6 @@
-<p>chat works!</p>
+<h1>Chat</h1>
+<h3>Room: {{me.room}}</h3>
+<ul>
+    <li>{{me.name}}</li>
+    <li *ngFor="let user of users">{{user.name}}</li>
+</ul>

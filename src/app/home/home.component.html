@@ -1,1 +1,20 @@
-<p>home works!</p>
+<div class="home">
+    <h1>Login</h1>
+    <form>
+        <div class="inputForm">
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput name="name" [(ngModel)]="name" (mouseup)="$event.preventDefault()" (focus)="selectAllContent($event)" autofocus>
+            </mat-form-field>
+
+            <mat-checkbox class="example-margin" (change)="toggleDisabled()">Enter room id</mat-checkbox>
+            
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Room</mat-label>
+                <input matInput name="room" [(ngModel)]="room" [disabled]="!checkedRoom" (mouseup)="$event.preventDefault()" (focus)="selectAllContent($event)">
+            </mat-form-field>
+
+            <button mat-button color="primary" (click)="submit()">Get in</button>
+        </div>
+    </form>
+</div>
