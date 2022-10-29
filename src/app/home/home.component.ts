@@ -10,7 +10,7 @@ import { User } from 'src/utils/User.interface';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   uuid: string = uuidv4();
   me: User = JSON.parse(sessionStorage.getItem('user') || '{}');
   
@@ -25,19 +25,13 @@ export class HomeComponent implements OnInit {
     this.checkedRoom = false;
   }
 
-  ngOnInit(): void {
-    // console.log(this.me);
-  }
-
   submit(): void {
-  //   // conecta con el servidor socket, envia nombre y room (si se envia vacio los genera el servidor)
-    if (this.me.name == undefined || this.me.name != this.name || this.me.room != this.room){
+    if (this.me.name == undefined || this.me.name != this.name || this.room != this.room){
       sessionStorage.setItem('user', JSON.stringify({ name: this.name.trim().toLowerCase(), room: this.room }))
-      this.me = { name: this.name.trim().toLowerCase(), room: this.room }
+      this.me = { name: this.name.trim().toLowerCase() }
     }
 
-    this.socketService.emit('join', { name: this.me.name, room: this.me.room });
-    this.router.navigate(['/chat'])
+    this.router.navigate(['/chat/',this.room ])
   }
 
   toggleDisabled(): void {

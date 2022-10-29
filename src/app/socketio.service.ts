@@ -12,7 +12,7 @@ export class SocketioService {
     this.socket = io(environment.SOCKET_ENDPOINT)
   }
 
-  emit(eventName: string, data: any) {
+  emit(eventName: string, data: string | object) {
     this.socket.emit(eventName, data)
   }
 

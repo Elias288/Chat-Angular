@@ -1,0 +1,143 @@
+.container {
+    width: 100%;
+    height: 100vh;
+}
+
+.sidenav {
+    padding: 20px;
+    max-width: 80%;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        
+        .roomConnection {
+            display: flex;
+            align-items: center;
+
+            h3 {
+                flex: 1 auto;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+        
+        .usersList {
+            flex: 1 auto;
+            padding: 2rem 1.5rem 0;
+            overflow: auto;
+        }
+    }
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-direction: row-reverse;
+    border-bottom: 1px solid;
+    padding-bottom: 0.5rem;
+    background-color: #fff;
+    position: absolute;
+}
+
+.chatbody {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    
+    .messagesList {
+        flex: 1 auto;
+        padding: 5rem 1rem 3rem;
+        overflow: auto;
+
+        .message-body {
+            width: 100%;
+            display: flex;
+            padding-top: 2rem;
+        }
+        // .message-body:not(:first-child) {
+        //     padding-top: 2rem;
+        // }
+
+        .system {
+            justify-content: center;
+            
+            .message {
+                background-color: rgb(171 171 171);
+            }
+        }
+        
+        .sent {
+            flex-direction: row-reverse;
+            .message {
+                background-color: rgb(55, 130, 236);
+            }
+        }
+
+        .received .message {  
+            background-color: rgb(4, 139, 56);
+        }
+
+        .message {
+            padding: 0.3rem 1rem;
+            width: fit-content;
+            max-width: 80%;
+            border-radius: 5px;
+            border-bottom: 1px solid #000;
+            color: #fff;
+
+            p {
+                font-size: 1.5rem;
+            }
+        }
+
+    }
+
+    .inputs {
+        display: flex;
+
+        .textarea {
+            height: 50px;
+            flex: 1 1 auto;
+            font-size: 1.3rem;
+            padding: 5px 10px 0;
+        }
+
+        button {
+            background-color: rgb(16, 132, 47);
+            color: #fff;
+        }
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .chatbody {
+        width: 80%;
+        height: 80%;
+        margin: auto;
+        margin-top: 5%;
+        border: 1px solid #000;
+        border-radius: 5px 5px 0 0;
+    }
+
+    .sidenav {
+        min-width: 300px;
+        width: 30%;
+    }
+
+    .header {
+        display: initial;
+        border: 0;
+    }
+    .chatbody {
+        .messagesList {
+            max-height: 500px;
+            padding: 0 1rem 3rem;
+            border: 1px solid rgb(161, 161, 161);
+            border-radius: 5px 5px 0 0;
+        }
+    }
+}

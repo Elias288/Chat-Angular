@@ -3,6 +3,7 @@ const http = require('http')
 const cors = require('cors')
 const { Server } = require('socket.io')
 const { Users, User } = require('./utils/user')
+const { Msg } = require('./utils/message')
 
 const port = process.env.PORT || 3001
 const app = express()
@@ -26,15 +27,10 @@ io.on('connection', (socket) => {
 		const newUser = new User(socket.id, data.name, data.room)
 		users.addUser(newUser)
 
-		console.log('Usuario conectado: ', newUser.name)
+		console.log('User', newUser.name, 'connected' )
 		// console.log('Cantidad de Usuario conectados: ' + users.getCantidadUsuarios())
 
-		const messageData = {
-			room: newUser.room,
-			author: 'sistema',
-			content: `${newUser.name} has joined`,
-			time: new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes() + ':' + new Date(Date.now()).getSeconds()
-		}
+		const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
 
 		socket.emit('userList', users.getUsersInRoom(newUser.room))
 		socket.broadcast.emit('userList', users.getUsersInRoom(newUser.room))
@@ -42,18 +38,30 @@ io.on('connection', (socket) => {
 		socket.join(newUser.room)
 		socket.broadcast.to(newUser.room).emit('receiveMessage', messageData)
 	})
-	
-	socket.on('disconnect', () => {
-		const user = users.getUser(socket.id)
 
-		if (user) {
-			users.removeUser(user.id)
-	
-			console.log('Usuario desconectado: ' + user.name)
-			// console.log('Cantidad de Usuario conectados: ' + users.getCantidadUsuarios())
-		}
+	socket.on('sendMessage', (data) => {
+		const message = new Msg(data.room, data.author, data.content)
+		// console.log(message)
+		socket.to(data.room).emit('receiveMessage', message)
 	})
+
+	socket.on('leaveRoom', () => disconnectUser(socket))
+	socket.on('disconnect', () => disconnectUser(socket))
 })
+
+const disconnectUser = (socket) => {
+	const user = users.getUser(socket.id)
+
+	if (user) {
+		users.removeUser(user.id)
+
+		const messageData = new Msg(user.room, 'system', `${user.name} has left`)
+		socket.broadcast.to(user.room).emit('receiveMessage', messageData)
+		socket.broadcast.to(user.room).emit('userList', users.getUsersInRoom(user.room))
+
+		console.log(user.name, "disconnected")
+	}
+}
 
 server.listen(port, () => {
 	console.log(`escuchando en *${port}`)
