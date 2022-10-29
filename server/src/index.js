@@ -11,7 +11,7 @@ const app = express()
 app.use(cors())
 const server = http.createServer(app)
 
-const whiteList = [ 'http://localhost:4200' ]
+const whiteList = [ 'http://localhost:4200', 'https://elelichatangular.netlify.app' ]
 const io = new Server(server, {
 	cors: {
 		origin: whiteList,
