@@ -28,6 +28,20 @@
             flex: 1 auto;
             padding: 2rem 1.5rem 0;
             overflow: auto;
+
+            ul {
+                list-style: none;
+                li {
+                    background: #989898;
+                    color: #fff;
+                    padding: 0.5rem;
+                    width: 100%;
+                    overflow: hidden;
+                    margin-bottom: .3rem;
+                    border-bottom: 1px solid #000;
+                }
+
+            }
         }
     }
 }

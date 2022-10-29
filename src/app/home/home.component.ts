@@ -15,20 +15,19 @@ export class HomeComponent {
   me: User = JSON.parse(sessionStorage.getItem('user') || '{}');
   
   name: string = this.me.name != undefined ? this.me.name : "guest-" + this.uuid.substring(0, 8);
-  room: string = this.uuid;
+  room: string = this.me.room != undefined ? this.me.room : this.uuid;
   checkedRoom: boolean;
 
   constructor(
-    private socketService: SocketioService,
     private router: Router
   ) {
     this.checkedRoom = false;
   }
 
   submit(): void {
-    if (this.me.name == undefined || this.me.name != this.name || this.room != this.room){
+    if (this.me.name == undefined || this.me.name == '' || this.me.name != this.name || this.me.room != this.room){
       sessionStorage.setItem('user', JSON.stringify({ name: this.name.trim().toLowerCase(), room: this.room }))
-      this.me = { name: this.name.trim().toLowerCase() }
+      this.me = { name: this.name.trim().toLowerCase(), room: this.room}
     }
 
     this.router.navigate(['/chat/',this.room ])

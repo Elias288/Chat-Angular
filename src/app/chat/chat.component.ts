@@ -25,8 +25,13 @@ export class ChatComponent implements OnInit  {
     private route: ActivatedRoute,
   ) {
     this.route.params.subscribe((params) => {
-      this.room = params['RoomId']
-      this.socketService.emit('join', { name: this.me.name, room: this.room });
+      if (sessionStorage.getItem('user')== null) {
+        sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'] }))
+        this.router.navigate(['/'])
+      } else {
+        this.room = params['RoomId']
+        this.socketService.emit('join', { name: this.me.name, room: this.room });
+      }
     })
   }
 
@@ -67,6 +72,9 @@ export class ChatComponent implements OnInit  {
 
   disconnect(): void {
     this.socketService.emit('leaveRoom', '')
+
+    sessionStorage.setItem('user', JSON.stringify({ name: this.me.name }))
+
     this.router.navigate(['/'])
   }
 }

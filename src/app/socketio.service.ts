@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import * as Rx from 'rxjs';
 import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SocketioService {
