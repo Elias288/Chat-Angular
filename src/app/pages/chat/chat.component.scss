@@ -5,7 +5,7 @@
 
 .sidenav {
     padding: 20px;
-    max-width: 80%;
+    min-width: 60%;
 
     .content {
         display: flex;
@@ -14,14 +14,15 @@
         
         .roomConnection {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
+            justify-content: space-between;
 
-            h3 {
-                flex: 1 auto;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
+            // h3 {
+            //     flex: 1 auto;
+            //     overflow: hidden;
+            //     white-space: nowrap;
+            //     text-overflow: ellipsis;
+            // }
         }
         
         .usersList {
@@ -148,6 +149,10 @@
     .sidenav {
         min-width: 300px;
         width: 30%;
+
+        .content .roomConnection {
+            justify-content: space-evenly;
+        }
     }
 
     .header {

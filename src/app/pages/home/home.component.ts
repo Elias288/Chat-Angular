@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SocketioService } from '../socketio.service';
+import { SocketioService } from '../../socketio.service';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from 'src/utils/User.interface';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   uuid: string = uuidv4();

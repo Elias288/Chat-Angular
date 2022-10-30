@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Message } from 'src/utils/Message.inteface';
 import { User } from 'src/utils/User.interface';
-import { SocketioService } from '../socketio.service';
+import { SocketioService } from '../../socketio.service';
 
 @Component({
   selector: 'app-chat',
@@ -42,7 +42,7 @@ export class ChatComponent implements OnInit  {
       this.users = this.list.filter(user => user.name != this.me.name)
     })
     this.socketService.listen('receiveMessage').subscribe(data => {
-      // console.log(data);
+      console.log(data);
       this.messages.push(data)
     })
   }
@@ -57,7 +57,7 @@ export class ChatComponent implements OnInit  {
       room: this.room,
       author: this.me.name,
       content: this.message,
-      time: new Date(Date.now()).getHours() + ':' + new Date(Date.now()).getMinutes() + ':' + new Date(Date.now()).getSeconds()
+      time: new Date().toTimeString().split(' ')[0]
     }
 
     this.socketService.emit('sendMessage', messageData)
@@ -66,8 +66,8 @@ export class ChatComponent implements OnInit  {
     this.message = ''
   }
 
-  copyRoomId(): void {
-    navigator.clipboard.writeText(this.room)
+  copyRoomUrl(): void {
+    navigator.clipboard.writeText(window.location.href)
   }
 
   disconnect(): void {

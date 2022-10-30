@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
 		const newUser = new User(socket.id, data.name, data.room)
 		users.addUser(newUser)
 
-		console.log('User', newUser.name, 'connected' )
+		// console.log('User', newUser.name, 'connected' )
 
 		const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
 		send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
@@ -56,7 +56,7 @@ const disconnectUser = (socket) => {
 		send(socket, true, user.room, 'receiveMessage', messageData)
 		send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
 
-		console.log(user.name, "disconnected")
+		// console.log(user.name, "disconnected")
 	}
 }
 
