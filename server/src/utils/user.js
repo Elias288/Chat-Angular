@@ -6,7 +6,12 @@ class Users {
     constructor(){}
 
     addUser(user){
-        this.users.push(user)
+        if (this.users.some(u => u.name === user.name)){
+            return 0
+        } else {
+            this.users.push(user)
+            return 1
+        }
     }
 
     getCantidadUsuarios(){

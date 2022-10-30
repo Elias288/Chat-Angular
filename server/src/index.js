@@ -25,16 +25,21 @@ io.on('connection', (socket) => {
 	
 	socket.on('join', (data) => {
 		const newUser = new User(socket.id, data.name, data.room)
-		users.addUser(newUser)
+		const res = users.addUser(newUser)
 
 		// console.log('User', newUser.name, 'connected' )
 
-		const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
-		send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
-		send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
-
-		socket.join(newUser.room)
-		send(socket, true, newUser.room, 'receiveMessage', messageData)
+		if (res) {
+			const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
+			send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
+			send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
+	
+			socket.join(newUser.room)
+			send(socket, true, newUser.room, 'receiveMessage', messageData)
+		} else {
+			// console.log('error')
+			send(socket, false, '', 'error', 'Already registered user')
+		}
 	})
 
 	socket.on('sendMessage', (data) => {

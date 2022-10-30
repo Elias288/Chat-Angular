@@ -25,7 +25,7 @@ export class ChatComponent implements OnInit  {
     private route: ActivatedRoute,
   ) {
     this.route.params.subscribe((params) => {
-      if (sessionStorage.getItem('user')== null) {
+      if (sessionStorage.getItem('user') == null) {
         sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'] }))
         this.router.navigate(['/'])
       } else {
@@ -36,13 +36,18 @@ export class ChatComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-    this.socketService.listen('userList').subscribe((data) => {
+    this.socketService.listen('error').subscribe((data) => {
       // console.log(data);
+      localStorage.setItem('error', JSON.stringify(data))
+      this.router.navigate(['/'])
+    })
+    this.socketService.listen('userList').subscribe((data) => {
+      localStorage.removeItem('error')
       this.list = data
       this.users = this.list.filter(user => user.name != this.me.name)
     })
     this.socketService.listen('receiveMessage').subscribe(data => {
-      console.log(data);
+      localStorage.removeItem('error')
       this.messages.push(data)
     })
   }
