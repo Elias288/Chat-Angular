@@ -14,7 +14,7 @@
         
         .roomConnection {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
 
             h3 {
                 flex: 1 auto;
@@ -26,7 +26,6 @@
         
         .usersList {
             flex: 1 auto;
-            padding: 2rem 1.5rem 0;
             overflow: auto;
 
             ul {
@@ -36,14 +35,21 @@
                     color: #fff;
                     padding: 0.5rem;
                     width: 100%;
+                    box-sizing: border-box;
                     overflow: hidden;
                     margin-bottom: .3rem;
                     border-bottom: 1px solid #000;
+                    box-sizing: border-box;
                 }
 
             }
         }
+
+        > * {
+            padding-bottom: 2rem;
+        }
     }
+
 }
 
 .header {
@@ -120,7 +126,7 @@
         .textarea {
             height: 50px;
             flex: 1 1 auto;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             padding: 5px 10px 0;
         }
 

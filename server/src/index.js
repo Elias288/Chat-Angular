@@ -28,21 +28,18 @@ io.on('connection', (socket) => {
 		users.addUser(newUser)
 
 		console.log('User', newUser.name, 'connected' )
-		// console.log('Cantidad de Usuario conectados: ' + users.getCantidadUsuarios())
 
 		const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
-
-		socket.emit('userList', users.getUsersInRoom(newUser.room))
-		socket.broadcast.emit('userList', users.getUsersInRoom(newUser.room))
+		send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
+		send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
 
 		socket.join(newUser.room)
-		socket.broadcast.to(newUser.room).emit('receiveMessage', messageData)
+		send(socket, true, newUser.room, 'receiveMessage', messageData)
 	})
 
 	socket.on('sendMessage', (data) => {
 		const message = new Msg(data.room, data.author, data.content)
-		// console.log(message)
-		socket.to(data.room).emit('receiveMessage', message)
+		send(socket, true, data.room, 'receiveMessage', message)
 	})
 
 	socket.on('leaveRoom', () => disconnectUser(socket))
@@ -56,11 +53,21 @@ const disconnectUser = (socket) => {
 		users.removeUser(user.id)
 
 		const messageData = new Msg(user.room, 'system', `${user.name} has left`)
-		socket.broadcast.to(user.room).emit('receiveMessage', messageData)
-		socket.broadcast.to(user.room).emit('userList', users.getUsersInRoom(user.room))
+		send(socket, true, user.room, 'receiveMessage', messageData)
+		send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
 
 		console.log(user.name, "disconnected")
 	}
+}
+
+const send = (socket, broadcast, room, direction, message) => {
+	broadcast 
+		? room !== '' 
+			? socket.broadcast.to(room).emit(direction, message) 
+			: socket.broadcast.emit(direction, message)
+		: room !== '' 
+			? socket.to(room).emit(direction, message) 
+			: socket.emit(direction, message)
 }
 
 server.listen(port, () => {

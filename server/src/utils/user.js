@@ -31,7 +31,7 @@ class User {
     constructor(id, name, room){
         this.id = id
         const roomId = uuidv4()
-        this.name = name == undefined ? 'guest-' + roomId.substring(0, 8) : name.trim().toLowerCase()
+        this.name = name == undefined || name == '' ? 'guest-' + roomId.substring(0, 8) : name.trim().toLowerCase()
         this.room = room == undefined ? roomId : room.trim().toLowerCase()
     }
 }
