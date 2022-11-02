@@ -5,14 +5,24 @@
             <h1>Chat</h1>
             
             <div class="roomConnection">
-                <mat-label>Copy room url</mat-label>
+                <mat-label>Room url</mat-label>
                 <button mat-raised-button
                         matTooltip="copy room url"
+                        matTooltipPosition="right"
                         (click)="copyRoomUrl()">
                     <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="content_copy"></mat-icon>
                 </button>
             </div>    
-
+            <div class="roomConnection">
+                <mat-label>Room Id</mat-label>
+                <button mat-raised-button
+                        matTooltip="copy room Id"
+                        matTooltipPosition="right"
+                        (click)="copyRoomId()">
+                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="content_copy"></mat-icon>
+                </button>
+            </div>    
+            
             <div class="usersList">
                 <ul>
                     <li>{{me.name}} (me)</li>
@@ -30,21 +40,68 @@
         </button>
     </div>
     <div class="chatbody">
-        <div class="messagesList" #scrollMe>
+        <div class="messagesList" (scroll)="scrolled($event)" #scrollFrame>
             <div class="list">
-                <div *ngFor="let message of messages" class="message-body {{message.author == me.name ? 'sent' : message.author == 'system' ? 'system' : 'received'}}">
+                <div *ngFor="let message of messages" class="message-body {{message.author == me.name ? 'sent' : message.author == 'system' ? 'system' : 'received'}}" #messageItem>
                     <div class="message">
+                        <div *ngIf="message.answer" class="answer">
+                            <div class="message">
+                                <p mat-line class="message-content">{{message.answer.content}}</p>
+                                <div mat-line class="message-info">
+                                    <small>
+                                        {{message.answer.author}} - <time>{{message.answer.time}}</time>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                         <p mat-line class="message-content">{{message.content}}</p>
                         <div mat-line class="message-info">
                             <small>
                                 {{message.author}} - <time>{{message.time}}</time>
                             </small>
                         </div>
+                        <!-- <button *ngIf="message.author != me.name && message.author != 'system'" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="after">
+                            <button mat-menu-item (click)="setAnswer(message)">
+                                <mat-icon>arrow_back</mat-icon>
+                                <span>Answer</span>
+                            </button>
+                            <button mat-menu-item disabled>
+                                <mat-icon>voicemail</mat-icon>
+                                <span>Check voice mail</span>
+                            </button>
+                            <button mat-menu-item>
+                                <mat-icon>notifications_off</mat-icon>
+                                <span>Disable alerts</span>
+                            </button>
+                        </mat-menu> -->
                     </div>
+                    <button *ngIf="message.author != me.name && message.author != 'system'" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>arrow_drop_down</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu" xPosition="before">
+                        <button  mat-menu-item (click)="setAnswer(message)">
+                            <mat-icon>arrow_back</mat-icon>
+                            <span>Answer</span>
+                        </button>
+                      </mat-menu>
                 </div>
             </div>
         </div>
         
+        <div class="answer-view" *ngIf="answer != undefined">
+            <div class="answer-globe">
+                <p mat-line class="message-content">{{answer.content}}</p>
+                <div mat-line class="message-info">
+                    <small>
+                        {{answer.author}} - <time>{{answer.time}}</time>
+                    </small>
+                </div>
+            </div>
+        </div>
+
         <div class="inputs">
             <textarea class="textarea" rows="1" placeholder="Message" [(ngModel)]="message"></textarea>
             <button mat-raised-button (click)="sendMessage()">

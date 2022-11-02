@@ -16,13 +16,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-
-            // h3 {
-            //     flex: 1 auto;
-            //     overflow: hidden;
-            //     white-space: nowrap;
-            //     text-overflow: ellipsis;
-            // }
         }
         
         .usersList {
@@ -47,7 +40,7 @@
         }
 
         > * {
-            padding-bottom: 2rem;
+            padding-bottom: 1rem;
         }
     }
 
@@ -82,12 +75,10 @@
 
         .message-body {
             width: 100%;
-            display: flex;
             padding-top: 2rem;
+            display: flex;
+            align-items: center;
         }
-        // .message-body:not(:first-child) {
-        //     padding-top: 2rem;
-        // }
 
         .system {
             justify-content: center;
@@ -104,23 +95,42 @@
             }
         }
 
-        .received .message {  
+        .received .message{  
             background-color: rgb(4, 139, 56);
+
+        }
+        
+        .answer .message {
+            background-color: rgb(255 255 255 / 30%);
+            width: 100%;
+            max-width: initial;
+            box-sizing: border-box;
         }
 
         .message {
             padding: 0.3rem 1rem;
-            width: fit-content;
-            max-width: 80%;
             border-radius: 5px;
             border-bottom: 1px solid #000;
             color: #fff;
-
+            width: fit-content;
+            max-width: 80%;
+            overflow-wrap: anywhere;
+            
             p {
                 font-size: 1.5rem;
             }
         }
 
+    }
+
+    .answer-view .answer-globe{
+        background-color: rgb(161 161 161);
+        color: #fff;
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        border-radius: 10px 10px 0 0;
+        max-height: 100px;
+        overflow: auto;
     }
 
     .inputs {
@@ -156,7 +166,7 @@
     }
 
     .chatbody {
-        width: 100%;
+        width: 95%;
         max-width: 1000px;
         min-width: 500px;
         height: 100vh;

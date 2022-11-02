@@ -43,7 +43,8 @@ io.on('connection', (socket) => {
 	})
 
 	socket.on('sendMessage', (data) => {
-		const message = new Msg(data.room, data.author, data.content)
+		const message = new Msg(data.room, data.author, data.content, data.answer)
+		// console.log(message)
 		send(socket, true, data.room, 'receiveMessage', message)
 	})
 

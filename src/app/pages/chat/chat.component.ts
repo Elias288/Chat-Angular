@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Message } from 'src/utils/Message.inteface';
 import { User } from 'src/utils/User.interface';
@@ -9,14 +9,19 @@ import { SocketioService } from '../../socketio.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit  {
-  @ViewChild('scrollMe', {read: ElementRef}) scroll!: ElementRef;
+export class ChatComponent implements OnInit, AfterViewInit  {
+  @ViewChild('scrollFrame', {static: false}) scrollFrame!: ElementRef;
+  @ViewChildren('messageItem') messageItem!: QueryList<any>;
+
+  private scrollContainer: any;
+  private isNearBottom = true;
 
   me: User = JSON.parse(sessionStorage.getItem('user') || '{}');
   list: Array<User> = [];
   users: Array<User> = [];
   messages: Array<Message> = [];
   message: string = '';
+  answer: undefined | Message;
   room: string = '';
 
   constructor(
@@ -52,9 +57,25 @@ export class ChatComponent implements OnInit  {
     })
   }
 
-  ngAfterViewChecked(): void {
-    this.scroll.nativeElement.scrollTop =
-    this.scroll.nativeElement.scrollHeight;
+  ngAfterViewInit(): void {
+    this.scrollContainer = this.scrollFrame.nativeElement;
+    this.messageItem.changes.subscribe(_ => {
+      this.scrollContainer.scroll({
+        top: this.scrollContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }); 
+  }
+
+  scrolled(event: any): void {
+    this.isNearBottom = this.isUserNearBottom();
+  }
+
+  private isUserNearBottom(): boolean {
+    const threshold = 150;
+    const position = this.scrollContainer.scrollTop + this.scrollContainer.offsetHeight;
+    const height = this.scrollContainer.scrollHeight;
+    return position > height - threshold;
   }
 
   sendMessage(): void {
@@ -62,17 +83,25 @@ export class ChatComponent implements OnInit  {
       room: this.room,
       author: this.me.name,
       content: this.message,
+      answer: this.answer,
       time: new Date().toTimeString().split(' ')[0]
     }
 
     this.socketService.emit('sendMessage', messageData)
-
+    this.answer = undefined
     this.messages.push(messageData)
     this.message = ''
   }
 
+  setAnswer(data: Message) {
+    this.answer = data;
+  }
+
   copyRoomUrl(): void {
     navigator.clipboard.writeText(window.location.href)
+  }
+  copyRoomId(): void {
+    navigator.clipboard.writeText(this.room)
   }
 
   disconnect(): void {
