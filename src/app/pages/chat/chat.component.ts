@@ -30,18 +30,18 @@ export class ChatComponent implements OnInit  {
         this.router.navigate(['/'])
       } else {
         this.room = params['RoomId']
-        this.socketService.emit('join', { name: this.me.name, room: this.room });
+        this.socketService.emit('join', { personalId: this.me.personalId, name: this.me.name, room: this.room });
       }
     })
   }
 
   ngOnInit(): void {
     this.socketService.listen('error').subscribe((data) => {
-      // console.log(data);
       localStorage.setItem('error', JSON.stringify(data))
       this.router.navigate(['/'])
     })
     this.socketService.listen('userList').subscribe((data) => {
+      // console.log(data);
       localStorage.removeItem('error')
       this.list = data
       this.users = this.list.filter(user => user.name != this.me.name)
@@ -78,7 +78,7 @@ export class ChatComponent implements OnInit  {
   disconnect(): void {
     this.socketService.emit('leaveRoom', '')
 
-    sessionStorage.setItem('user', JSON.stringify({ name: this.me.name }))
+    sessionStorage.setItem('user', JSON.stringify({ name: this.me.name, personalId: this.me.personalId }))
 
     this.router.navigate(['/'])
   }
