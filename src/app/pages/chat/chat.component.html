@@ -39,6 +39,7 @@
             <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="menu"></mat-icon>
         </button>
     </div>
+    
     <div class="chatbody">
         <div class="messagesList" (scroll)="scrolled($event)" #scrollFrame>
             <div class="list">
@@ -100,10 +101,13 @@
                     </small>
                 </div>
             </div>
+            <button class="cancel-answer" (click)="setAnswer(undefined)">
+                <mat-icon>close</mat-icon>
+            </button>
         </div>
 
         <div class="inputs">
-            <textarea class="textarea" rows="1" placeholder="Message" [(ngModel)]="message"></textarea>
+            <textarea class="textarea" rows="1" placeholder="Message" [(ngModel)]="message" #textarea></textarea>
             <button mat-raised-button (click)="sendMessage()">
                 <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="send"></mat-icon>
             </button>

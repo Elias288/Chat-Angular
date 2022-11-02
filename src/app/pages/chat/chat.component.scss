@@ -123,14 +123,28 @@
 
     }
 
-    .answer-view .answer-globe{
-        background-color: rgb(161 161 161);
-        color: #fff;
-        font-size: 1.5rem;
-        padding: 0.5rem;
-        border-radius: 10px 10px 0 0;
-        max-height: 100px;
-        overflow: auto;
+    .answer-view {
+        position: relative;
+
+        .answer-globe{
+            background-color: rgb(161 161 161);
+            color: #fff;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 10px 10px 0 0;
+            max-height: 100px;
+            overflow: auto;
+        }
+
+        .cancel-answer {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 30px;
+            height: 30px;
+            background: none;
+            border: none;
+        }
     }
 
     .inputs {

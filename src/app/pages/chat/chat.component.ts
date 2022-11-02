@@ -11,10 +11,12 @@ import { SocketioService } from '../../socketio.service';
 })
 export class ChatComponent implements OnInit, AfterViewInit  {
   @ViewChild('scrollFrame', {static: false}) scrollFrame!: ElementRef;
+  @ViewChild('textarea', {static: false}) textareaElement!: ElementRef;
   @ViewChildren('messageItem') messageItem!: QueryList<any>;
 
   private scrollContainer: any;
   private isNearBottom = true;
+  private textarea: any;
 
   me: User = JSON.parse(sessionStorage.getItem('user') || '{}');
   list: Array<User> = [];
@@ -59,6 +61,7 @@ export class ChatComponent implements OnInit, AfterViewInit  {
 
   ngAfterViewInit(): void {
     this.scrollContainer = this.scrollFrame.nativeElement;
+    this.textarea = this.textareaElement.nativeElement;
     this.messageItem.changes.subscribe(_ => {
       this.scrollContainer.scroll({
         top: this.scrollContainer.scrollHeight,
@@ -93,8 +96,11 @@ export class ChatComponent implements OnInit, AfterViewInit  {
     this.message = ''
   }
 
-  setAnswer(data: Message) {
+  setAnswer(data: any) {
     this.answer = data;
+    setTimeout(()=>{
+      this.textarea.focus();
+    },0);
   }
 
   copyRoomUrl(): void {
