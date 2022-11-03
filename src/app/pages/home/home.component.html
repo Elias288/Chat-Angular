@@ -14,7 +14,7 @@
                 <input matInput name="room" [(ngModel)]="room" [disabled]="!checkedRoom" (mouseup)="$event.preventDefault()" (focus)="selectAllContent($event)">
             </mat-form-field>
 
-            <button mat-button color="primary" (click)="submit()">Get in</button>
+            <button mat-button color="primary" type="button" (click)="submit()">Get in</button>
         </div>
     </form>
     <footer>

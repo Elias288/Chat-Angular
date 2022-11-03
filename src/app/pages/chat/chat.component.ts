@@ -98,12 +98,13 @@ export class ChatComponent implements OnInit, AfterViewInit  {
       answer: this.answer,
       time: new Date().toTimeString().split(' ')[0]
     }
-
-    this.socketService.emit('sendMessage', messageData)
-    this.answer = undefined
-    this.messages.push(messageData)
+    
+    if (messageData.content.trim() !== '') {
+      this.socketService.emit('sendMessage', messageData)
+      this.answer = undefined
+      this.messages.push(messageData)
+    }
     this.message = ''
-
     this.focusTextArea()
   }
 

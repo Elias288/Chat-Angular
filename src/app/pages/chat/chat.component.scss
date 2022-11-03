@@ -58,15 +58,12 @@
 }
 
 .chatbody {
-    width: 90%;
+    width: 100%;
     min-width: 330px;
-    height: 95%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin: auto;
-    border: 1px solid #000;
-    border-radius: 5px 5px 0 0;
     
     .messagesList {
         flex: 1 auto;
@@ -183,10 +180,9 @@
         width: 95%;
         max-width: 1000px;
         min-width: 500px;
-        height: 100vh;
+        margin: auto;
         box-sizing: border-box;
         padding-top: 50px;
-        border: 0;
 
         .messagesList {
             max-height: 500px;
