@@ -108,7 +108,7 @@
 
         <div class="inputs">
             <textarea class="textarea" rows="1" placeholder="Message" [(ngModel)]="message" #textarea></textarea>
-            <button mat-raised-button (click)="sendMessage()">
+            <button mat-raised-button (click)="sendMessage()" [disabled]="!message">
                 <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="send"></mat-icon>
             </button>
         </div>

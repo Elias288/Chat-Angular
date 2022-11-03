@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
 	socket.on('join', (data) => {
 		const newUser = new User(socket.id, data.personalId, data.name, data.room)
 		const res = users.addUser(newUser)
-		// console.log('User', newUser.name, 'connected' )
+		// console.log('User', newUser.name, 'connected to', newUser.room)
 		// console.log(newUser)
 
 		if (res) {

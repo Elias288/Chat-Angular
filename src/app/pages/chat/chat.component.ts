@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Message } from 'src/utils/Message.inteface';
 import { User } from 'src/utils/User.interface';
@@ -30,6 +31,7 @@ export class ChatComponent implements OnInit, AfterViewInit  {
     private socketService: SocketioService,
     private router: Router,
     private route: ActivatedRoute,
+    private _snackBar: MatSnackBar,
   ) {
     this.route.params.subscribe((params) => {
       if (sessionStorage.getItem('user') == null) {
@@ -37,7 +39,12 @@ export class ChatComponent implements OnInit, AfterViewInit  {
         this.router.navigate(['/'])
       } else {
         this.room = params['RoomId']
-        this.socketService.emit('join', { personalId: this.me.personalId, name: this.me.name, room: this.room });
+        this.socketService.emit('join', {
+          personalId: this.me.personalId,
+          name: this.me.name,
+          room: this.room,
+          // time: new Date().toTimeString().split(' ')[0]
+        });
       }
     })
   }
@@ -55,6 +62,8 @@ export class ChatComponent implements OnInit, AfterViewInit  {
     })
     this.socketService.listen('receiveMessage').subscribe(data => {
       localStorage.removeItem('error')
+      data.time = new Date().toTimeString().split(' ')[0]
+      // console.log(data)
       this.messages.push(data)
     })
   }
@@ -94,10 +103,17 @@ export class ChatComponent implements OnInit, AfterViewInit  {
     this.answer = undefined
     this.messages.push(messageData)
     this.message = ''
+
+    this.focusTextArea()
   }
 
   setAnswer(data: any) {
     this.answer = data;
+    
+    this.focusTextArea()
+  }
+
+  private focusTextArea() {
     setTimeout(()=>{
       this.textarea.focus();
     },0);
@@ -106,12 +122,13 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   copyRoomUrl(): void {
     navigator.clipboard.writeText(window.location.href)
   }
+
   copyRoomId(): void {
     navigator.clipboard.writeText(this.room)
   }
 
   disconnect(): void {
-    this.socketService.emit('leaveRoom', '')
+    this.socketService.emit('leaveRoom', { time: new Date().toTimeString().split(' ')[0] })
 
     sessionStorage.setItem('user', JSON.stringify({ name: this.me.name, personalId: this.me.personalId }))
 
