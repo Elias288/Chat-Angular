@@ -1,0 +1,57 @@
+  .login {
+      // height: 100vh;
+      padding-top: 50px;
+      box-sizing: border-box;
+
+      h1 {
+          text-align: center;
+      }
+  }
+  form {
+      padding: 30px 2.5rem 0;
+      height: 500px;
+    
+      .inputForm {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          min-width: 300px;
+    
+          > * {
+            margin-bottom: 1.3rem;
+          }
+    
+          .input-full-width {
+            width: 100%;
+            font-size: 1.3rem;
+          }
+    
+          button {
+            width: 100%;
+            border: 1px solid;
+          }
+      }
+  }
+  
+  @media screen and (min-width: 500px) {
+    
+    form {
+      width: fit-content;
+      margin: auto;
+      padding: 0;
+      padding-top: 30px;
+  
+      .inputForm {
+        align-items: flex-start;
+  
+        .input-full-width {
+          font-size: 1rem;
+        }
+  
+        button {
+          width: fit-content;
+        }
+      }
+    }
+    
+  }
