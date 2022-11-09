@@ -39,15 +39,15 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   ) {
     this.route.params.subscribe((params) => {
       if (sessionStorage.getItem('user') == null) {
-        sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'] }))
+        sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'].toLowerCase() }))
         this.router.navigate(['/'])
       }
 
-      this.room = params['RoomId']
+      // this.room = params['RoomId']
       this.socketService.emit('join', {
         personalId: this.me.personalId,
         name: this.me.name,
-        room: this.room,
+        room: this.me.room,
       });
     })
   }

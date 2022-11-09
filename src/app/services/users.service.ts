@@ -36,7 +36,7 @@ export class UsersService {
 
     const user: User = {
       name: name.trim().toLowerCase(),
-      room: room.split(" ").join(""),
+      room: room.split(" ").join("").toLowerCase(),
       personalId,
     }
 

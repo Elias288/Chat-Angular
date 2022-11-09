@@ -47,8 +47,8 @@ io.on('connection', (socket) => {
 		const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
 		socket.join(newUser.room)
 
-		send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
-		send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
+		send(socket, false, "", 'userList', users.getUsersInRoom(newUser.room))
+		send(socket, true, newUser.room, 'userList', users.getUsersInRoom(newUser.room))
 		send(socket, true, newUser.room, 'receiveMessage', messageData)
 	})
 
