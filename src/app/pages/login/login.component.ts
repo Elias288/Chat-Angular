@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SocketioService } from '../../services/socketio.service';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from 'src/utils/User.interface';
-import { LoginService } from 'src/app/services/login.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -12,26 +10,31 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  
   uuid: string = uuidv4().replace(/-/g, '');
+  me = JSON.parse(sessionStorage.getItem('user') || '{}')
   checkedRoom: boolean = false;
-  name: string = this.LoginService.user.name == undefined 
-    ? "guest-" + this.uuid.substring(0, 8) 
-    : this.LoginService.user.name;
+  name: string 
+  error: string = localStorage.getItem('error') || '';
 
   constructor(
     private router: Router,
-    private LoginService: LoginService,
-  ) { }
+    private _snackBar: MatSnackBar,
+    private userService: UserService,
+  ) {
+    this.name = this.me.name == undefined 
+      ? "guest-" + this.uuid.substring(0, 8) 
+      : this.me.name;
+  }
 
   ngOnInit(): void {
-    if (this.LoginService.isLogged()) {
-      this.router.navigate(['/home/'])
+    if (this.error){
+      this._snackBar.open(this.error, 'close');
+      this.error = "";
     }
   }
 
-  submit(): void {
-    this.LoginService.login(this.name, this.uuid)
+  login(): void {
+    this.userService.login(this.name, this.uuid)
   }
 
   toggleDisabled(): void {

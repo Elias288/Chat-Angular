@@ -1,73 +1,38 @@
 .home {
-  height: 100vh;
-  padding-top: 50px;
+  min-height: 500px;
   box-sizing: border-box;
+  padding: 1rem 0;
 
-  h1 {
+  h1, h2, h3 {
     text-align: center;
   }
-}
 
-form {
-  padding: 30px 2.5rem 0;
-  height: 500px;
-
-  .inputForm {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      min-width: 300px;
-
-      > * {
-        margin-bottom: 1.3rem;
-      }
-
-      .input-full-width {
-        width: 100%;
-        font-size: 1.3rem;
-      }
-
-      button {
-        width: 100%;
-        border: 1px solid;
-      }
+  .home-content {
+    margin-top: 1rem;
   }
-}
 
-footer {
-  padding: .5rem 1rem;
-  box-sizing: border-box;
-  background: #e7e7e7;
-
-  a {
-    text-decoration: none;
-  }
-}
-
-@media screen and (min-width: 500px) {
-  
-  form {
-    width: fit-content;
+  .container {
+    width: 80%;
+    min-height: 100px;
     margin: auto;
-    padding: 0;
-    padding-top: 30px;
+    box-sizing: border-box;
+    padding: .5rem 0;
+  }
 
-    .inputForm {
-      align-items: flex-start;
+  .userslist {
+    mat-list > * {
+      font-size: 1.3rem;
 
-      .input-full-width {
-        font-size: 1rem;
-      }
-
-      button {
-        width: fit-content;
+      a {
+        text-decoration: none;
       }
     }
   }
-  footer {
-    .copyright p {
-      width: 100%;
-      text-align: center;
-    }
+
+  .rooms {
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
   }
 }
+

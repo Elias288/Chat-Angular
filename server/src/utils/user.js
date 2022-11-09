@@ -6,16 +6,18 @@ class Users {
     constructor () {}
 
     addUser (user) {
-        if (this.users.some(u => u.name === user.name)){
-            return 0
-        } else {
-            this.users.push(user)
-            return 1
-        }
+        if (this.users.some(u => u.name === user.name)) { return 1 }
+
+        this.users.push(user)
+        return 0
     }
 
-    getUser(id){
+    getUserBySocketId(id){
         return this.users.find((user) => user.id === id)
+    }
+
+    getUserByName(name){
+        return this.users.find((user) => user.name === name)
     }
 
     // getUserPeronalIdByName (name) {
@@ -45,7 +47,7 @@ class User {
 
         const uuid = uuidv4().replace(/-/g, '')
         this.name = name == undefined || name == '' ? 'guest-' + uuid.substring(0, 8) : name.trim().toLowerCase()
-        this.room = room == undefined || room == '' ? uuid : room.trim().toLowerCase()
+        this.room = room == undefined || room == '' ? undefined : room.trim().toLowerCase()
     }
 }
 

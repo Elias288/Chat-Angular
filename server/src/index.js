@@ -25,21 +25,34 @@ io.on('connection', (socket) => {
 	
 	socket.on('join', (data) => {
 		const newUser = new User(socket.id, data.personalId, data.name, data.room)
-		const res = users.addUser(newUser)
-		// console.log('User', newUser.name, 'connected to', newUser.room)
-		// console.log(newUser)
+		const res = users.addUser(newUser) //1 error, 0 spend
 
-		if (res) {
-			const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
-			send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
-			send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
-	
-			socket.join(newUser.room)
-			send(socket, true, newUser.room, 'receiveMessage', messageData)
-		} else {
-			// console.log('error')
+		if(res) {
 			send(socket, false, '', 'error', 'Already registered user')
+			return
 		}
+
+		send(socket, false, '', 'userList', users.users)
+		send(socket, true, '', 'userList', users.users)
+	})
+
+	socket.on('joinRoom', (data) => {
+		const user = users.getUserByName(data.name)
+		
+		if (!user) {
+			send(socket, false, '', 'error', 'Non existent user')
+			return
+		}
+
+		user.room = data.room
+		console.log(user.name, 'connected to room:', data.room)
+		
+		const messageData = new Msg(user.room, 'system', `${user.name} has joined`)
+		socket.join(user.room)
+		send(socket, false, '', 'userList', users.getUsersInRoom(user.room))
+		send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
+
+		send(socket, true, user.room, 'receiveMessage', messageData)
 	})
 
 	socket.on('sendMessage', (data) => {
@@ -48,20 +61,31 @@ io.on('connection', (socket) => {
 		send(socket, true, data.room, 'receiveMessage', message)
 	})
 
-	socket.on('leaveRoom', () => disconnectUser(socket))
+	socket.on('leaveRoom', () => {
+		const user = users.getUserBySocketId(socket.id)
+
+		if (!user || user.room == undefined) {
+			send(socket, false, '', 'error', 'User or room not found')
+			return
+		}
+		
+		console.log(user.name, "disconnect to room:", user.room)
+		const messageData = new Msg(user.room, 'system', `${user.name} has left of the room`)
+		send(socket, true, user.room, 'receiveMessage', messageData)
+		send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
+		users.room = undefined;
+	})
+
+	socket.on('leave', () => disconnectUser(socket))
 	socket.on('disconnect', () => disconnectUser(socket))
 })
 
 const disconnectUser = (socket) => {
-	const user = users.getUser(socket.id)
-
+	const user = users.getUserBySocketId(socket.id)
 	if (user) {
 		users.removeUser(user.id)
-
-		const messageData = new Msg(user.room, 'system', `${user.name} has left`)
-		send(socket, true, user.room, 'receiveMessage', messageData)
-		send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
-
+		
+		send(socket, true, '', 'userList', users.users)
 		// console.log(user.name, "disconnected")
 	}
 }

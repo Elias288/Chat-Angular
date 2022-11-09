@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { SocketioService } from '../../socketio.service';
-import { v4 as uuidv4 } from 'uuid';
-import { User } from 'src/utils/User.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { RoomService } from 'src/app/services/room.service';
+import { SocketioService } from 'src/app/services/socketio.service';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/utils/User.interface';
 
 @Component({
   selector: 'app-home',
@@ -12,57 +12,50 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  uuid: string = uuidv4().replace(/-/g, '');
-  me: User = JSON.parse(sessionStorage.getItem('user') || '{}');
-  error: string = localStorage.getItem('error') || '';
-  checkedRoom: boolean;
-  
-  name: string = this.me.name == undefined ? "guest-" + this.uuid.substring(0, 8) : this.me.name;
-  room: string = this.me.room != undefined ? this.me.room : this.me.personalId != undefined ? this.me.personalId : this.uuid;
+
+  /**
+   * TODO: Home page with list of connected users
+   * TODO: Connect to personalId and create chat groups
+   * TODO: Access only if logged
+   */
+ 
+  me: User = JSON.parse(sessionStorage.getItem('user') || '{}')
+  users: Array<User> = []
+
+  room: string = ''
+  checkedRoom: boolean = false;
 
   constructor(
     private router: Router,
-    private _snackBar: MatSnackBar,
     private socketService: SocketioService,
+    private _snackBar: MatSnackBar,
+    private userService: UserService,
+    private roomService: RoomService,
   ) {
-    this.checkedRoom = false;
-  }
+    this.userService.setMe(this.me)
+    this.room = this.roomService.room
+   }
 
   ngOnInit(): void {
-    this.socketService.emit('leaveRoom', '')
+    localStorage.removeItem('error')
 
-    if (this.error !== undefined && this.error !== ""){
-      this._snackBar.open(this.error, 'close');
-      this.error = "";
-    }
-  }
-
-  submit(): void {
-    const name = this.name.trim().toLowerCase();
-    const room = this.room.trim().toLowerCase();
-
-    if (name == '' || name == undefined || this.me.name == '') {
-      this._snackBar.open('Name cannot be empty', 'close');
-      this.name = this.me.name == undefined ? "guest-" + this.uuid.substring(0, 8) : this.me.name
-      throw new Error('Name cannot be empty')
-    }
-
-    if (room == '' || room == undefined || this.me.room == '') {
-      this.room = this.me.room != undefined ? this.me.room : this.me.personalId != undefined ? this.me.personalId : this.uuid;
-      this._snackBar.open('Room cannot be empty', 'close');
-      throw new Error('Name cannot be empty')
+    if (this.userService.me.room != undefined) {
+      this.socketService.emit('leaveRoom', '')
     }
     
-    const user = {
-      name: name.trim().toLowerCase(),
-      personalId: this.me.personalId == undefined && this.me.room == undefined ? this.uuid : this.me.personalId,
-      room: room.split(" ").join("")
-    }
+    this.socketService.listen('userList').subscribe((data) => {
+      this.users = this.userService.setUsers(data)
+    })
+  }
 
-    sessionStorage.setItem('user', JSON.stringify(user))
-    this.me = user
+  GetInRoom() {
+    // this.roomService.getInRoom(this.room)
+  }
 
-    this.router.navigate(['/chat/', this.me.room ])
+  logout() {
+    this.userService.logout()
+    this.socketService.emit('leave', '')
+    this.router.navigate(['/'])
   }
 
   toggleDisabled(): void {

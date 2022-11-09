@@ -1,9 +1,10 @@
+import { Location } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Message } from 'src/utils/Message.inteface';
 import { User } from 'src/utils/User.interface';
-import { SocketioService } from '../../socketio.service';
+import { SocketioService } from '../../services/socketio.service';
 
 @Component({
   selector: 'app-chat',
@@ -32,40 +33,39 @@ export class ChatComponent implements OnInit, AfterViewInit  {
     private router: Router,
     private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
+    private location: Location,
   ) {
-    this.route.params.subscribe((params) => {
-      if (sessionStorage.getItem('user') == null) {
-        sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'] }))
-        this.router.navigate(['/'])
-      } else {
-        this.room = params['RoomId']
-        this.socketService.emit('join', {
-          personalId: this.me.personalId,
-          name: this.me.name,
-          room: this.room,
-          // time: new Date().toTimeString().split(' ')[0]
-        });
-      }
-    })
+    // this.route.params.subscribe((params) => {
+    //   if (sessionStorage.getItem('user') == null) {
+    //     sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'] }))
+    //     this.location.back()
+    //   } else {
+    //     this.room = params['RoomId']
+    //     this.socketService.emit('joinRoom', {
+    //       personalId: this.me.personalId,
+    //       name: this.me.name,
+    //       room: this.room,
+    //       // time: new Date().toTimeString().split(' ')[0]
+    //     });
+    //   }
+    // })
   }
 
   ngOnInit(): void {
     this.socketService.listen('error').subscribe((data) => {
       localStorage.setItem('error', JSON.stringify(data))
-      this.router.navigate(['/'])
+      this.location.back()
     })
     this.socketService.listen('userList').subscribe((data) => {
-      // console.log(data);
       localStorage.removeItem('error')
       this.list = data
       this.users = this.list.filter(user => user.name != this.me.name)
     })
-    this.socketService.listen('receiveMessage').subscribe(data => {
-      localStorage.removeItem('error')
-      data.time = new Date().toTimeString().split(' ')[0]
-      // console.log(data)
-      this.messages.push(data)
-    })
+    // this.socketService.listen('receiveMessage').subscribe(data => {
+    //   data.time = new Date().toTimeString().split(' ')[0]
+    //   console.log(data)
+    //   this.messages.push(data)
+    // })
   }
 
   ngAfterViewInit(): void {
@@ -91,27 +91,26 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   }
 
   sendMessage(): void {
-    const messageData: Message = { 
-      room: this.room,
-      author: this.me.name,
-      content: this.message,
-      answer: this.answer,
-      time: new Date().toTimeString().split(' ')[0]
-    }
+    // const messageData: Message = { 
+    //   room: this.room,
+    //   author: this.me.name,
+    //   content: this.message,
+    //   answer: this.answer,
+    //   time: new Date().toTimeString().split(' ')[0]
+    // }
     
-    if (messageData.content.trim() !== '') {
-      this.socketService.emit('sendMessage', messageData)
-      this.answer = undefined
-      this.messages.push(messageData)
-    }
-    this.message = ''
-    this.focusTextArea()
+    // if (messageData.content.trim() !== '') {
+    //   this.socketService.emit('sendMessage', messageData)
+    //   this.answer = undefined
+    //   this.messages.push(messageData)
+    // }
+    // this.message = ''
+    // this.focusTextArea()
   }
 
   setAnswer(data: any) {
-    this.answer = data;
-    
-    this.focusTextArea()
+    // this.answer = data;
+    // this.focusTextArea()
   }
 
   private focusTextArea() {
@@ -121,18 +120,17 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   }
 
   copyRoomUrl(): void {
-    navigator.clipboard.writeText(window.location.href)
+    // navigator.clipboard.writeText(window.location.href)
   }
 
   copyRoomId(): void {
-    navigator.clipboard.writeText(this.room)
+    // navigator.clipboard.writeText(this.room)
   }
 
   disconnect(): void {
-    this.socketService.emit('leaveRoom', { time: new Date().toTimeString().split(' ')[0] })
+    // this.socketService.emit('leaveRoom', { time: new Date().toTimeString().split(' ')[0] })
 
     sessionStorage.setItem('user', JSON.stringify({ name: this.me.name, personalId: this.me.personalId }))
-
-    this.router.navigate(['/'])
+    this.router.navigate(['/home'])
   }
 }
