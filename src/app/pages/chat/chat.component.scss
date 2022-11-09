@@ -1,6 +1,7 @@
-.container {
+.chat {
     width: 100%;
     height: 100vh;
+    min-height: 600px;
 }
 
 .sidenav {
@@ -162,6 +163,10 @@
 }
 
 @media screen and (min-width: 500px) {
+    .chat {
+        min-height: 500px;
+    }
+
     .sidenav {
         min-width: 300px;
         width: 30%;
@@ -180,6 +185,7 @@
         width: 95%;
         max-width: 1000px;
         min-width: 500px;
+        height: 100%;
         margin: auto;
         box-sizing: border-box;
         padding-top: 50px;

@@ -1,0 +1,21 @@
+.not-found {
+    height: 80vh;
+    min-height: 600px;
+    padding: .5rem .5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+
+    img {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .not-found {
+        img {
+            max-width: 600px;
+        }
+    }
+}

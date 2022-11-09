@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { Message } from 'src/utils/Message.inteface';
 
 @Injectable()
 export class SocketioService {

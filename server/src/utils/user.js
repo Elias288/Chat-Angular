@@ -7,21 +7,16 @@ class Users {
 
     addUser (user) {
         if (this.users.some(u => u.name === user.name)){
-            return 0
-        } else {
-            this.users.push(user)
-            return 1
+            return false
         }
+
+        this.users.push(user)
+        return true
     }
 
     getUser(id){
         return this.users.find((user) => user.id === id)
     }
-
-    // getUserPeronalIdByName (name) {
-    //     const user = this.users.find((user) => user.name === name)
-    //     return user.personalId
-    // }
 
     getUsersInRoom (room) {
         return this.users.filter(user => user.room === room)
@@ -34,11 +29,6 @@ class Users {
 }
 
 class User {
-    id = ""
-    personalId = ""
-    name = ""
-    room = ""
-
     constructor(id, personalId, name, room){
         this.id = id
         this.personalId = personalId

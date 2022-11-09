@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MessagesService } from 'src/app/services/messages.service';
+import { UsersService } from 'src/app/services/users.service';
 import { Message } from 'src/utils/Message.inteface';
 import { User } from 'src/utils/User.interface';
-import { SocketioService } from '../../socketio.service';
+import { SocketioService } from '../../services/socketio.service';
 
 @Component({
   selector: 'app-chat',
@@ -20,7 +22,7 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   private textarea: any;
 
   me: User = JSON.parse(sessionStorage.getItem('user') || '{}');
-  list: Array<User> = [];
+  // list: Array<User> = [];
   users: Array<User> = [];
   messages: Array<Message> = [];
   message: string = '';
@@ -32,20 +34,21 @@ export class ChatComponent implements OnInit, AfterViewInit  {
     private router: Router,
     private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
+    private userService: UsersService,
+    private messagesService: MessagesService,
   ) {
     this.route.params.subscribe((params) => {
       if (sessionStorage.getItem('user') == null) {
         sessionStorage.setItem('user', JSON.stringify({ room: params['RoomId'] }))
         this.router.navigate(['/'])
-      } else {
-        this.room = params['RoomId']
-        this.socketService.emit('join', {
-          personalId: this.me.personalId,
-          name: this.me.name,
-          room: this.room,
-          // time: new Date().toTimeString().split(' ')[0]
-        });
       }
+
+      this.room = params['RoomId']
+      this.socketService.emit('join', {
+        personalId: this.me.personalId,
+        name: this.me.name,
+        room: this.room,
+      });
     })
   }
 
@@ -54,16 +57,15 @@ export class ChatComponent implements OnInit, AfterViewInit  {
       localStorage.setItem('error', JSON.stringify(data))
       this.router.navigate(['/'])
     })
-    this.socketService.listen('userList').subscribe((data) => {
-      // console.log(data);
+
+    this.socketService.listen('userList').subscribe((data: Array<User>) => {
       localStorage.removeItem('error')
-      this.list = data
-      this.users = this.list.filter(user => user.name != this.me.name)
+      this.users = data.filter(user => user.name != this.me.name)
     })
+
     this.socketService.listen('receiveMessage').subscribe(data => {
       localStorage.removeItem('error')
       data.time = new Date().toTimeString().split(' ')[0]
-      // console.log(data)
       this.messages.push(data)
     })
   }
@@ -91,26 +93,18 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   }
 
   sendMessage(): void {
-    const messageData: Message = { 
-      room: this.room,
-      author: this.me.name,
-      content: this.message,
-      answer: this.answer,
-      time: new Date().toTimeString().split(' ')[0]
-    }
-    
-    if (messageData.content.trim() !== '') {
-      this.socketService.emit('sendMessage', messageData)
+    if (this.message.trim() !== '') {
+      const msg = this.messagesService.sendMessage(this.room, this.me.name, this.message, this.answer)
+      this.messages.push(msg)
       this.answer = undefined
-      this.messages.push(messageData)
     }
+
     this.message = ''
     this.focusTextArea()
   }
 
   setAnswer(data: any) {
     this.answer = data;
-    
     this.focusTextArea()
   }
 
@@ -129,10 +123,6 @@ export class ChatComponent implements OnInit, AfterViewInit  {
   }
 
   disconnect(): void {
-    this.socketService.emit('leaveRoom', { time: new Date().toTimeString().split(' ')[0] })
-
-    sessionStorage.setItem('user', JSON.stringify({ name: this.me.name, personalId: this.me.personalId }))
-
-    this.router.navigate(['/'])
+    this.userService.logout()
   }
 }

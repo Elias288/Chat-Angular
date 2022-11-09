@@ -25,26 +25,23 @@ io.on('connection', (socket) => {
 	
 	socket.on('join', (data) => {
 		const newUser = new User(socket.id, data.personalId, data.name, data.room)
-		const res = users.addUser(newUser)
-		// console.log('User', newUser.name, 'connected to', newUser.room)
-		// console.log(newUser)
+		const res = users.addUser(newUser) // true == added; false == not added
 
-		if (res) {
-			const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
-			send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
-			send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
-	
-			socket.join(newUser.room)
-			send(socket, true, newUser.room, 'receiveMessage', messageData)
-		} else {
-			// console.log('error')
-			send(socket, false, '', 'error', 'Already registered user')
+		if (!res) {
+			send(socket, false, '', 'error', 'S - Already registered user')
+			return
 		}
+
+		const messageData = new Msg(newUser.room, 'system', `${newUser.name} has joined`)
+		socket.join(newUser.room)
+
+		send(socket, false, '', 'userList', users.getUsersInRoom(newUser.room))
+		send(socket, true, '', 'userList', users.getUsersInRoom(newUser.room))
+		send(socket, true, newUser.room, 'receiveMessage', messageData)
 	})
 
 	socket.on('sendMessage', (data) => {
 		const message = new Msg(data.room, data.author, data.content, data.answer)
-		// console.log(message)
 		send(socket, true, data.room, 'receiveMessage', message)
 	})
 
@@ -55,15 +52,15 @@ io.on('connection', (socket) => {
 const disconnectUser = (socket) => {
 	const user = users.getUser(socket.id)
 
-	if (user) {
-		users.removeUser(user.id)
-
-		const messageData = new Msg(user.room, 'system', `${user.name} has left`)
-		send(socket, true, user.room, 'receiveMessage', messageData)
-		send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
-
-		// console.log(user.name, "disconnected")
+	if (!user) {
+		send(socket, false, '', 'error', 'S - User not found')
+		return
 	}
+
+	users.removeUser(user.id)
+	const messageData = new Msg(user.room, 'system', `${user.name} has left`)
+	send(socket, true, user.room, 'receiveMessage', messageData)
+	send(socket, true, user.room, 'userList', users.getUsersInRoom(user.room))
 }
 
 const send = (socket, broadcast, room, direction, message) => {

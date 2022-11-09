@@ -14,20 +14,21 @@
                 <input matInput name="room" [(ngModel)]="room" [disabled]="!checkedRoom" (mouseup)="$event.preventDefault()" (focus)="selectAllContent($event)">
             </mat-form-field>
 
-            <button mat-button color="primary" type="button" (click)="submit()">Get in</button>
+            <button mat-button color="primary" type="button" (click)="login()">Get in</button>
         </div>
     </form>
-    <footer>
-        <mat-list role="list">
-            <mat-list-item role="listitem">
-                <a href="https://github.com/Elias288/Chat-Angular">Github Repository</a>
-            </mat-list-item>
-            <mat-list-item role="listitem">
-                <a href="https://elias288.github.io/ElelisPage/">Briefcase</a>
-            </mat-list-item>
-            <mat-list-item role="listitem" class="copyright">
-                <p>Creted by <strong>Elías Bianchi</strong> © All rights reserved</p>
-            </mat-list-item>
-          </mat-list>
-    </footer>
 </div>
+
+<footer>
+    <mat-list role="list">
+        <mat-list-item role="listitem">
+            <a href="https://github.com/Elias288/Chat-Angular">Github Repository</a>
+        </mat-list-item>
+        <mat-list-item role="listitem">
+            <a href="https://elias288.github.io/ElelisPage/">Briefcase</a>
+        </mat-list-item>
+        <mat-list-item role="listitem" class="copyright">
+            <p>Created by <strong>Elías Bianchi</strong> © All rights reserved</p>
+        </mat-list-item>
+      </mat-list>
+</footer>

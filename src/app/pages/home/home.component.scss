@@ -1,5 +1,6 @@
 .home {
-  height: 100vh;
+  height: 80vh;
+  min-height: 600px;
   padding-top: 50px;
   box-sizing: border-box;
 
@@ -45,9 +46,13 @@ footer {
 }
 
 @media screen and (min-width: 500px) {
-  
+  .home {
+    min-height: 500px;
+  }
+
   form {
     width: fit-content;
+    height: fit-content;
     margin: auto;
     padding: 0;
     padding-top: 30px;
