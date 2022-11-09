@@ -1,14 +1,14 @@
 {
-  "name": "server",
+  "name": "backend_chat",
   "version": "1.0.0",
-  "description": "",
+  "description": "Chat backend, communicating clients allowing sending messages in real time using socket.io",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Elias Bianchi",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

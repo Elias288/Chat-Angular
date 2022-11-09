@@ -5,11 +5,23 @@ const { Server } = require('socket.io')
 const { Users, User } = require('./utils/user')
 const { Msg } = require('./utils/message')
 
+const { author, license, name, description } = require('../package.json');
+
 const port = process.env.PORT || 3001
 const app = express()
 
 app.use(cors())
 const server = http.createServer(app)
+
+app.get('/', (req, res) => {
+    res.send({
+		name,
+		author,
+		description,
+		"frontEnd": "https://elelichatangular.netlify.app/",
+		license, 
+	})
+})
 
 const whiteList = [ 'http://localhost:4200', 'https://elelichatangular.netlify.app' ]
 const io = new Server(server, {
